@@ -1,6 +1,6 @@
 import minimum from '../util/minimum';
 import {rebindAll} from '../util/rebind';
-import {collisionArea} from './collision';
+import {collisionArea} from '../util/collision';
 import {identity} from '../util/fn';
 
 // iteratively remove the rectangle with the greatest area of collision

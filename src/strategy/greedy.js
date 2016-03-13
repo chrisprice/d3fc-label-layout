@@ -1,8 +1,8 @@
 import d3 from 'd3';
-import {totalCollisionArea} from './collision';
+import {totalCollisionArea} from '../util/collision';
 import containerUtils from './container';
 import minimum from '../util/minimum';
-import {getAllPlacements} from './placement';
+import {getAllPlacements} from '../util/placement';
 
 export default function() {
 
