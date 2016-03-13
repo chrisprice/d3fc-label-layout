@@ -3,27 +3,6 @@ const labelLayout = require('../build/d3fc-label-layout');
 
 describe('fc.layout.rectanges', function() {
 
-    it('should function without scales', function() {
-        var svg = document.createElement('svg');
-
-        var rectangles = labelLayout.labelLayout(labelLayout.strategy.local())
-            .size([10, 10])
-            .position(function(d) { return [d.x, d.y]; });
-
-        var data = [
-            {x: 50, y: 50},
-            {x: 45, y: 50}
-        ];
-
-        d3.select(svg)
-            .datum(data)
-            .call(rectangles);
-
-        // ensure that the first rectangle has been moved to avoid collision
-        expect(svg.children[0].getAttribute('transform')).toEqual('translate(40, 40)');
-        expect(svg.children[1].getAttribute('transform')).toEqual('translate(45, 50)');
-    });
-
     it('should remove collisions', function() {
         var svg = document.createElement('svg');
 

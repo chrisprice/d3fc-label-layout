@@ -2,7 +2,6 @@ import d3 from 'd3';
 import dataJoinUtil from './util/dataJoin';
 import {noop, identity} from './util/fn';
 import {rebindAll, rebind} from './util/rebind';
-import {range} from './util/scale';
 
 export default function(layoutStrategy) {
 
@@ -19,16 +18,7 @@ export default function(layoutStrategy) {
         .element('g')
         .attr('class', 'rectangle');
 
-    var rectangles = function(selection) {
-
-        if (strategy.bounds && xScale && yScale) {
-            var xRange = range(xScale);
-            var yRange = range(yScale);
-            strategy.bounds([
-                Math.max(xRange[0], xRange[1]),
-                Math.max(yRange[0], yRange[1])
-            ]);
-        }
+    var label = function(selection) {
 
         selection.each(function(data, index) {
 
@@ -50,7 +40,7 @@ export default function(layoutStrategy) {
             });
 
             // apply the strategy to derive the layout. The strategy does not change the order
-            // or number of rectangles.
+            // or number of label.
             var layout = strategy(childRects);
 
             g.attr({
@@ -69,48 +59,48 @@ export default function(layoutStrategy) {
         });
     };
 
-    rebind(rectangles, dataJoin, 'key');
-    rebindAll(rectangles, strategy);
+    rebind(label, dataJoin, 'key');
+    rebindAll(label, strategy);
 
-    rectangles.size = function(x) {
+    label.size = function(x) {
         if (!arguments.length) {
             return size;
         }
         size = d3.functor(x);
-        return rectangles;
+        return label;
     };
 
-    rectangles.position = function(x) {
+    label.position = function(x) {
         if (!arguments.length) {
             return position;
         }
         position = d3.functor(x);
-        return rectangles;
+        return label;
     };
 
-    rectangles.xScale = function(value) {
+    label.xScale = function(value) {
         if (!arguments.length) {
             return xScale;
         }
         xScale = value;
-        return rectangles;
+        return label;
     };
 
-    rectangles.yScale = function(value) {
+    label.yScale = function(value) {
         if (!arguments.length) {
             return yScale;
         }
         yScale = value;
-        return rectangles;
+        return label;
     };
 
-    rectangles.component = function(value) {
+    label.component = function(value) {
         if (!arguments.length) {
             return component;
         }
         component = value;
-        return rectangles;
+        return label;
     };
 
-    return rectangles;
+    return label;
 }
