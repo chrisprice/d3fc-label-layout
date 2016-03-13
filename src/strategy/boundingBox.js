@@ -1,6 +1,3 @@
-import d3 from 'd3';
-import {rebindAll} from '../../util/rebind';
-
 export default function() {
 
     var bounds = null;
@@ -8,7 +5,8 @@ export default function() {
     var strategy = function(data) {
         return data.map(function(d, i) {
 
-            var tx = d.x, ty = d.y;
+            var tx = d.x;
+            var ty = d.y;
             if (tx + d.width > bounds[0]) {
                 tx -= d.width;
             }

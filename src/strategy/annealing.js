@@ -1,9 +1,8 @@
 import d3 from 'd3';
-import {rebindAll} from '../../util/rebind';
-import {allWithCollisions, totalCollisionArea} from './collision';
+import {totalCollisionArea} from './collision';
 import containerUtils from './container';
 import {getAllPlacements} from './placement';
-import {randomItem, randomIndex, cloneAndReplace} from '../../util/array';
+import {randomItem, randomIndex, cloneAndReplace} from '../util/array';
 
 export default function() {
 

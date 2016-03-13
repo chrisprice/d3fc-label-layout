@@ -1,7 +1,7 @@
-import minimum from '../../util/minimum';
-import {rebindAll} from '../../util/rebind';
+import minimum from '../util/minimum';
+import {rebindAll} from '../util/rebind';
 import {collisionArea} from './collision';
-import {identity} from '../../util/fn';
+import {identity} from '../util/fn';
 
 // iteratively remove the rectangle with the greatest area of collision
 export default function(adaptedStrategy) {

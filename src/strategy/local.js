@@ -1,10 +1,9 @@
 import d3 from 'd3';
-import {rebindAll} from '../../util/rebind';
-import minimum from '../../util/minimum';
+import minimum from '../util/minimum';
 import {collisionArea, totalCollisionArea, collidingWith} from './collision';
 import containerUtils from './container';
 import {getAllPlacements} from './placement';
-import {cloneAndReplace} from '../../util/array';
+import {cloneAndReplace} from '../util/array';
 
 export default function() {
 

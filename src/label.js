@@ -1,18 +1,18 @@
 import d3 from 'd3';
-import dataJoinUtil from '../util/dataJoin';
-import {noop, identity} from '../util/fn';
-import {range} from '../util/scale';
-import {rebindAll, rebind} from '../util/rebind';
+import dataJoinUtil from './util/dataJoin';
+import {noop, identity} from './util/fn';
+import {rebindAll, rebind} from './util/rebind';
+import {range} from './util/scale';
 
 export default function(layoutStrategy) {
 
-    var size = d3.functor([0, 0]),
-        position = function(d, i) { return [d.x, d.y]; };
+    var size = d3.functor([0, 0]);
+    var position = function(d, i) { return [d.x, d.y]; };
 
-    var xScale = d3.scale.identity(),
-        yScale = d3.scale.identity(),
-        strategy = layoutStrategy || identity,
-        component = noop;
+    var xScale = d3.scale.identity();
+    var yScale = d3.scale.identity();
+    var strategy = layoutStrategy || identity;
+    var component = noop;
 
     var dataJoin = dataJoinUtil()
         .selector('g.rectangle')
@@ -22,8 +22,8 @@ export default function(layoutStrategy) {
     var rectangles = function(selection) {
 
         if (strategy.bounds && xScale && yScale) {
-            var xRange = range(xScale),
-                yRange = range(yScale);
+            var xRange = range(xScale);
+            var yRange = range(yScale);
             strategy.bounds([
                 Math.max(xRange[0], xRange[1]),
                 Math.max(yRange[0], yRange[1])

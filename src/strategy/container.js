@@ -2,7 +2,8 @@ export default function() {
     var bounds = null;
 
     var container = function(point) {
-        var width = bounds[0], height = bounds[1];
+        var width = bounds[0];
+        var height = bounds[1];
         // If the bounds haven't been defined, then don't enforce
         return (width == null && height == null) ||
             (!(point.x < 0 || point.y < 0 ||
