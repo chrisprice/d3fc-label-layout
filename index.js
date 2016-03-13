@@ -1,4 +1,4 @@
-export { default as labelLayout } from './src/label';
+export { default as label } from './src/label';
 
 import local from './src/strategy/local';
 import greedy from './src/strategy/greedy';

@@ -1,7 +1,7 @@
 {
   "name": "d3fc-label-layout",
   "version": "0.0.1",
-  "description": "A D3 layout for that places labels in order to avoid overlaps",
+  "description": "A D3 layout that places labels avoiding overlaps, with strategies including simulated annealing, greedy and local.",
   "license": "MIT",
   "keywords": [
     "d3",

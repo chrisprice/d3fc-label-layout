@@ -1,12 +1,12 @@
 const d3 = require('d3');
-const labelLayout = require('../build/d3fc-label-layout');
+const label = require('../build/d3fc-label-layout');
 
 describe('fc.layout.rectanges', function() {
 
     it('should remove collisions', function() {
         var svg = document.createElement('svg');
 
-        var labels = labelLayout.labelLayout(labelLayout.strategy.removeOverlaps())
+        var labels = label.label(label.strategy.removeOverlaps())
             .size([10, 10])
             .position(function(d) { return [d.x, d.y]; });
 

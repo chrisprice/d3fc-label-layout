@@ -1,5 +1,9 @@
+
+// the container component is used to determine whether a points
+// is within the a bounding container. This component is typically
+// used by other strategies.
 export default function() {
-    var bounds = null;
+    var bounds = [null, null];
 
     var container = function(point) {
         var width = bounds[0];
