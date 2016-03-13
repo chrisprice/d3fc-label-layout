@@ -6,7 +6,7 @@ describe('fc.layout.rectanges', function() {
     it('should remove collisions', function() {
         var svg = document.createElement('svg');
 
-        var rectangles = labelLayout.labelLayout(labelLayout.strategy.removeOverlaps())
+        var labels = labelLayout.labelLayout(labelLayout.strategy.removeOverlaps())
             .size([10, 10])
             .position(function(d) { return [d.x, d.y]; });
 
@@ -20,7 +20,7 @@ describe('fc.layout.rectanges', function() {
 
         d3.select(svg)
             .datum(data)
-            .call(rectangles);
+            .call(labels);
 
         expect(svg.children.length).toEqual(3);
         expect(svg.children[0].getAttribute('display')).toEqual('inherit');

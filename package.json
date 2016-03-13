@@ -1,5 +1,6 @@
 {
   "name": "d3fc-label-layout",
+  "version": "0.0.1",
   "description": "A D3 layout for that places labels in order to avoid overlaps",
   "license": "MIT",
   "keywords": [

@@ -7,16 +7,13 @@ export default function(layoutStrategy) {
 
     var size = d3.functor([0, 0]);
     var position = function(d, i) { return [d.x, d.y]; };
-
-    var xScale = d3.scale.identity();
-    var yScale = d3.scale.identity();
     var strategy = layoutStrategy || identity;
     var component = noop;
 
     var dataJoin = dataJoinUtil()
-        .selector('g.rectangle')
+        .selector('g.label')
         .element('g')
-        .attr('class', 'rectangle');
+        .attr('class', 'label');
 
     var label = function(selection) {
 
@@ -75,22 +72,6 @@ export default function(layoutStrategy) {
             return position;
         }
         position = d3.functor(x);
-        return label;
-    };
-
-    label.xScale = function(value) {
-        if (!arguments.length) {
-            return xScale;
-        }
-        xScale = value;
-        return label;
-    };
-
-    label.yScale = function(value) {
-        if (!arguments.length) {
-            return yScale;
-        }
-        yScale = value;
         return label;
     };
 
