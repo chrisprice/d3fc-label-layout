@@ -2,7 +2,7 @@
 
 A D3 layout that places labels avoiding overlaps, with strategies including simulated annealing, greedy and local.
 
-!(d3fc label layout)[d3fc-label-layout.png]
+![d3fc label layout](d3fc-label-layout.png)
 
 For a live demo, see the [GitHub Pages site](http://colineberhardt.github.io/d3fc-label-layout/).
 
