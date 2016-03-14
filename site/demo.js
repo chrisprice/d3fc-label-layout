@@ -25,10 +25,12 @@ function generateData() {
 }
 
 var svg = d3.select('svg')
-        .attr('width', width)
-        .attr('height', height);
+    .attr('width', width)
+    .attr('height', height);
 
 function render() {
+    svg.selectAll('g').remove();
+
     var labels = fc.layout.label(strategy)
         .size(function() {
             var textSize = d3.select(this)
@@ -39,7 +41,6 @@ function render() {
         })
         .component(label);
 
-    svg.selectAll('g').remove();
     svg.append('g')
         .datum(data)
         .call(labels);
@@ -68,6 +69,10 @@ d3.select('#strategy-form .btn')
         if (strategyName === 'annealing') {
             strategy.temperature(document.getElementById('temperature').value);
             strategy.cooling(document.getElementById('cooling').value);
+        }
+        var enforceBounds = document.getElementById('enforce-bounds').checked;
+        if (enforceBounds) {
+            strategy.bounds([width, height]);
         }
         render();
     });

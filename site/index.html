@@ -27,6 +27,11 @@
             input[type=text] {
                 width: 60px !important;
             }
+            .form-group {
+                margin-left: 10px;
+                border-left: 1px solid rgb(192, 192, 192);
+                padding-left: 10px;
+            }
         </style>
     </head>
     <body class="container">
@@ -47,10 +52,20 @@
                     <option value="greedy">Greedy</option>
                     <option value="none">None</option>
                 </select>
-                <label class="annealing-field" for="temperature">Temperature</label>
-                <input class="annealing-field" type="text" class="form-control" id="temperature" value="1000">
-                <label class="annealing-field" for="cooling">Cooling</label>
-                <input class="annealing-field" type="text" class="form-control" id="cooling" value="10">
+            </div>
+            <div class="form-group">
+                <label for="enforce-bounds">Enforce Bounds</label>
+                <input type="checkbox" id="enforce-bounds"/>
+            </div>
+            <div class="form-group annealing-field">
+                <label for="temperature">Temperature</label>
+                <input type="text" class="form-control" id="temperature" value="1000">
+            </div>
+            <div class="form-group annealing-field">
+                <label for="cooling">Cooling</label>
+                <input type="text" class="form-control" id="cooling" value="10">
+            </div>
+            <div class="form-group">
                 <button class="btn btn-default">Apply Strategy</button>
             </div>
         </form>
