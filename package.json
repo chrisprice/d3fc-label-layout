@@ -21,7 +21,7 @@
     "test": "npm run bundle && eslint index.js src/**/*.js test/**/*.js && jasmine JASMINE_CONFIG_PATH=test/support/jasmine.json",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "site": "npm run test && mkdir -p site/lib && cp build/d3fc-label-layout.js site/lib && cp node_modules/d3/d3.js site/lib",
-    "dev": "concurrently \"live-server --open=site/index.html\" \"npm run site && watch -p 'src/**/*.js' -c 'npm run site'\"",
+    "dev": "npm run site && watch -p 'src/**/*.js' -c 'npm run site'",
     "deploy-site": "npm run site && bash ./site/deploy.sh"
   },
   "devDependencies": {
