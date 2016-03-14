@@ -134,8 +134,9 @@ Constructs an annealing strategy.
 
 Optionally specifies a bounding region, as an array of two values, `[width, height]`. The strategy will try to keep labels within the bounds.
 
-*annealing*.**temperature**(*array*)
-*annealing*.**cooling**(*array*)
+*annealing*.**temperature**(*integer*)
+
+*annealing*.**cooling**(*integer*)
 
 The *temperature* parameter indicates the initial 'number' to use for the random probability calculation, and *cooling* defines the delta of the temperature between iterations. The algorithm runs for `Math.ceil(temperature / cooling)` iterations.
 
