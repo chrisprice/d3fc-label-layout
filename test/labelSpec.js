@@ -1,7 +1,7 @@
 const d3 = require('d3');
 const label = require('../build/d3fc-label-layout');
 
-describe('fc.layout.rectanges', function() {
+describe('fc.layout.rectangles', function() {
 
     it('should remove collisions', function() {
         var svg = document.createElement('svg');
