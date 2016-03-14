@@ -48,8 +48,18 @@ export default function(layoutStrategy) {
                     return 'translate(' + layout[i].x + ', ' + layout[i].y + ')';
                 },
                 // set the layout width / height so that children can use SVG layout if required
-                'layout-width': function(d, i) { return layout[i].width; },
-                'layout-height': function(d, i) { return layout[i].height; }
+                'layout-width': function(d, i) {
+                    return layout[i].width;
+                },
+                'layout-height': function(d, i) {
+                    return layout[i].height;
+                },
+                'anchor-x': function(d, i) {
+                    return position.call(this, d, i)[0] - layout[i].x;
+                },
+                'anchor-y': function(d, i) {
+                    return position.call(this, d, i)[1] - layout[i].y;
+                }
             });
 
             g.call(component);

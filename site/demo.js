@@ -1,13 +1,9 @@
 /* global d3 fc */
 
-// a very simple example component
-function label(selection) {
-    selection.append('rect')
-        .attr({'width': itemWidth, 'height': itemHeight});
-    selection.append('text')
-        .text(function(d) { return d.data; })
-        .attr({'y': 14, 'x': 7});
-}
+var labelPadding = 4;
+var label = fc.layout.textLabel()
+    .padding(labelPadding)
+    .value(function(d) { return d.data; });
 
 var width = 700;
 var height = 350;
@@ -34,7 +30,13 @@ var svg = d3.select('svg')
 
 function render() {
     var labels = fc.layout.label(strategy)
-        .size([itemWidth, itemHeight])
+        .size(function() {
+            var textSize = d3.select(this)
+              .select('text')
+              .node()
+              .getBBox();
+            return [textSize.width + labelPadding * 2, textSize.height + labelPadding * 2];
+        })
         .component(label);
 
     svg.selectAll('g').remove();

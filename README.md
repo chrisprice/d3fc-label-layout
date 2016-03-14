@@ -64,6 +64,7 @@ Each `g` element has the following properties set:
 
  - `layout-width`, `layout-height` - the width and height of this label, as provided by the `size` property.
  - `display` - set to `inherit` or `hidden`, based on whether the strategy has hidden this label.
+ - `anchor-x`, `anchor-y` - the original label location in relative coordinates to the this `g` element.
 
 
 *label*.**size**(*accessor*)
