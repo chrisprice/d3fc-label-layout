@@ -1,7 +1,8 @@
 import d3 from 'd3';
-import {totalCollisionArea, areaOfIntersection} from '../util/collision';
-import minimum from '../util/minimum';
-import {getAllPlacements} from '../util/placement';
+import {totalCollisionArea} from './util/collision';
+import intersect from './intersect';
+import minimum from './util/minimum';
+import {getAllPlacements} from './util/placement';
 
 export default function() {
 
@@ -35,7 +36,7 @@ export default function() {
                 x: 0, y: 0, width: bounds[0], height: bounds[1]
             };
             areaOutsideContainer = d3.sum(layout.map(function(d) {
-                var areaOutside = d.width * d.height - areaOfIntersection(d, containerRect);
+                var areaOutside = d.width * d.height - intersect(d, containerRect);
                 // this bias is twice as strong as the overlap penalty
                 return areaOutside * 2;
             }));

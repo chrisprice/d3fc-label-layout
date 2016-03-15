@@ -9,7 +9,7 @@ var width = 700;
 var height = 350;
 var itemWidth = 60;
 var itemHeight = 20;
-var strategy = strategyInterceptor(fc.layout.strategy.annealing());
+var strategy = strategyInterceptor(fc.layout.annealing());
 var data = [];
 
 // we intercept the strategy in order to capture the final layout and compute statistics
@@ -23,9 +23,17 @@ function strategyInterceptor(strategy) {
         if (!interceptor.time) {
             Object.defineProperty(interceptor, 'time', { enumerable: false, writable: true });
             Object.defineProperty(interceptor, 'hidden', { enumerable: false, writable: true });
+            Object.defineProperty(interceptor, 'overlap', { enumerable: false, writable: true });
         }
+        var visibleLabels = finalLayout.filter(function(d) { return !d.hidden; });
         interceptor.time = time;
-        interceptor.hidden = finalLayout.filter(function(d) { return d.hidden; }).length;
+        interceptor.hidden = finalLayout.length - visibleLabels.length;
+        interceptor.overlap = d3.sum(visibleLabels.map(function(label, index) {
+            return d3.sum(visibleLabels.filter(function(_, i) { return i !== index; })
+                .map(function(d) {
+                    return fc.layout.intersect(d, label);
+                }));
+        }));
         return finalLayout;
     };
     d3.rebind(interceptor, strategy, 'bounds');
@@ -78,7 +86,8 @@ function render() {
 
     var statsElement = document.getElementById('statistics');
     statsElement.innerHTML = '<b>Execution Time:</b> ' + strategy.time + 'ms, ' +
-        '<b>Hidden Labels:</b> ' + strategy.hidden;
+        '<b>Hidden Labels:</b> ' + strategy.hidden + ' ' +
+        '<b>Overlap Area:</b> ' + strategy.overlap.toFixed(2);
 }
 
 function getStrategyName() {
@@ -99,7 +108,7 @@ d3.select('#strategy-form .btn')
         var strategyName = getStrategyName();
         strategy = function(d) { return d; };
         if (strategyName !== 'none') {
-            strategy = fc.layout.strategy[strategyName]();
+            strategy = fc.layout[strategyName]();
         }
         if (strategyName === 'annealing') {
             strategy.temperature(document.getElementById('temperature').value);
@@ -111,7 +120,7 @@ d3.select('#strategy-form .btn')
         }
         var removeOverlaps = document.getElementById('remove-overlaps').checked;
         if (removeOverlaps) {
-            strategy = fc.layout.strategy.removeOverlaps(strategy);
+            strategy = fc.layout.removeOverlaps(strategy);
         }
         strategy = strategyInterceptor(strategy);
         render();

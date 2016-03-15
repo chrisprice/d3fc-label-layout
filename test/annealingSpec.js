@@ -1,7 +1,7 @@
 require('d3');
-const label = require('../../build/d3fc-label-layout');
+const label = require('../build/d3fc-label-layout');
 
-describe('fc.layout.strategy.annealing', function() {
+describe('annealing', function() {
 
     var containerWidth = 100;
     var containerHeight = 100;
@@ -19,7 +19,7 @@ describe('fc.layout.strategy.annealing', function() {
         {x: 40, y: 40, width: elementWidth, height: elementHeight}
     ];
 
-    var strategiser = label.strategy.annealing()
+    var strategiser = label.annealing()
         .bounds([containerWidth, containerHeight]);
 
     var mathRandom = Math.random;
