@@ -65,7 +65,8 @@ describe('fc.layout.strategy.annealing', function() {
             expect(firstResults[6].x).toEqual(45);
             expect(firstResults[6].y).toEqual(30);
 
-            expect(firstResults[7]).toEqual(data[7]);
+            expect(firstResults[7].x).toEqual(data[7].x);
+            expect(firstResults[7].y).toEqual(data[7].y);
         });
 
     });
