@@ -25,17 +25,15 @@ The label layout component provides a mechanism for arranging child components b
 ```javascript
 var labelPadding = 2;
 
-// rather than using a component, a text element is appended directly
-var label = function(sel) {
-    sel.append('text')
-      .text(function(d) { return d.properties.name; })
-      .attr({
-        'dy': '0.7em',
-        'transform': 'translate(' + labelPadding + ', ' + labelPadding +')'
-      });
-};
+// the component used to render each label
+var textLabel = fc.layout.textLabel()
+  .padding(labelPadding)
+  .value(function(d) { return d.properties.name; });
 
-var strategy = fc.layout.strategy.removeOverlaps(fc.layout.strategy.greedy());
+
+// a strategy that combines simulated annealing with removal
+// of overlapping labels
+var strategy = fc.layout.removeOverlaps(fc.layout.annealing());
 
 // create the layout that positions the labels
 var labels = fc.layout.label(strategy)
@@ -48,15 +46,16 @@ var labels = fc.layout.label(strategy)
         return [textSize.width + labelPadding * 2, textSize.height + labelPadding * 2];
     })
     .position(function(d) { return projection(d.geometry.coordinates); })
-    .component(label);
+    .component(textLabel);
 
+// render!
 svg.datum(places.features)
      .call(labels);
 ```
 
 ## Label
 
-*layout*.**label**(*strategy*)
+*fc.layout*.**label**(*strategy*)
 
 Constructs a new label layout with the given *strategy*. The label layout creates an array of rectangle bounding boxes which are passed to the strategy, which will typically move the boxes in order to minimise overlaps. Once the layout is complete a data join is used to construct a containing `g` element for each item in the bound array, and the component supplied to the layout is 'call'-ed on each element.
 
@@ -101,9 +100,9 @@ The strategy should return an array of objects indicating the placement of each 
 
 ### Greedy
 
-The greedy strategy adds each label in sequence, selecting the position where the label has the lowest overlap with already added rectangles and is inside the container.
+The greedy strategy is a very fast way of reducing label overlap. It adds each label in sequence, selecting the position where the label has the lowest overlap with already added rectangles and is inside the container.
 
-*layout.strategy*.**greedy**()
+*fc.layout*.**greedy**()
 
 Constructs a greedy strategy.
 
@@ -111,23 +110,11 @@ Constructs a greedy strategy.
 
 Optionally specifies a bounding region, as an array of two values, `[width, height]`. The strategy will try to keep labels within the bounds.
 
-### Local
-
-The local search layout strategy tries to resolve label overlaps. It attempts to move each label with an overlap to another potential placement with a reduced overlap.
-
-*layout.strategy*.**local**()
-
-Constructs a local strategy.
-
-*local*.**bounds**(*array*)
-
-Optionally specifies a bounding region, as an array of two values, `[width, height]`. The strategy will try to keep labels within the bounds.
-
 ### Simulated Annealing
 
 The simulated annealing strategy runs over a set number of iterations, choosing a different location for one label on each iteration. If that location results in a better result, it is saved for the next iteration. Otherwise, it is saved with probability inversely proportional with the iteration it is currently on. This helps it break out of local optimums, hopefully producing better output. Because of the random nature of the algorithm, it produces variable output.
 
-*layout.strategy*.**annealing**()
+*fc.layout*.**annealing**()
 
 Constructs an annealing strategy.
 
@@ -143,8 +130,28 @@ The *temperature* parameter indicates the initial 'number' to use for the random
 
 ### Remove overlaps
 
-This strategy doesn't re-position labels to reduce overlaps. Instead it removes overlapping labels. This is performed iteratively, with the labels that have the greatest area of overlap removed first.
+This strategy doesn't re-position labels to reduce overlaps, instead it removes overlapping labels. This is performed iteratively, with the labels that have the greatest area of overlap removed first.
 
-*layout.strategy*.**removeOverlaps**(*strategy*)
+*fc.layout*.**removeOverlaps**(*strategy*)
 
 Constructs a removeOverlaps strategy, adapting the supplied *strategy* in order to remove overlaps after it has been executed.
+
+## Text Label
+
+This is a simple component that renders a label:
+
+![d3fc label layout](textLabel.png)
+
+This component uses the `layout-width` and `layout-height` properties of its parent element to set its own width and height. It also uses the `anchor-x` and `anchor-y` properties to place the circular anchor. These properties are all set by the label layout as described above.
+
+*fc.layout*.**textLabel**()
+
+Constructs a text label component.
+
+*textLabel*.**labelPadding**(*number*)
+
+Specifies the padding around the text.
+
+*textLabel*.**value**(*accessor*)
+
+Specifies the text rendered by this label as an accessor function.
