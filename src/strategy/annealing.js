@@ -1,5 +1,5 @@
 import d3 from 'd3';
-import {totalCollisionArea} from '../util/collision';
+import {totalCollisionArea, areaOfIntersection} from '../util/collision';
 import containerUtils from './container';
 import {getAllPlacements} from '../util/placement';
 import {randomItem, randomIndex, cloneAndReplace} from '../util/array';
@@ -9,6 +9,7 @@ export default function() {
     var container = containerUtils();
     var temperature = 1000;
     var cooling = 1;
+    var bounds = [0, 0];
 
     var strategy = function(data) {
 
@@ -55,9 +56,16 @@ export default function() {
         return strategy;
     };
 
+    strategy.bounds = function(x) {
+        if (!arguments.length) {
+            return bounds;
+        }
+        bounds = x;
+        return strategy;
+    };
+
     function getPotentialState(originalData, iteratedData) {
         // For one point choose a random other placement.
-
         var victimLabelIndex = randomIndex(originalData);
         var label = originalData[victimLabelIndex];
 
@@ -67,16 +75,37 @@ export default function() {
         return cloneAndReplace(iteratedData, victimLabelIndex, replacement);
     }
 
-    d3.rebind(strategy, container, 'bounds');
+    function scorer(layout) {
+        // penalise collisions
+        var collisionArea = totalCollisionArea(layout);
 
-    function scorer(placement) {
-        var collisionArea = totalCollisionArea(placement);
-        var pointsOnScreen = 1;
-        for (var i = 0; i < placement.length; i++) {
-            var point = placement[i];
-            pointsOnScreen += container(point) ? 0 : 100;
+        // penalise rectangles falling outside of the bounds
+        var areaOutsideContainer = 0;
+        if (bounds[0] !== 0 && bounds[1] !== 0) {
+            var containerRect = {
+                x: 0, y: 0, width: bounds[0], height: bounds[1]
+            };
+            areaOutsideContainer = d3.sum(layout.map(function(d) {
+                var areaOutside = d.width * d.height - areaOfIntersection(d, containerRect);
+                // this bias is twice as strong as the overlap penalty
+                return areaOutside * 2;
+            }));
         }
-        return collisionArea * pointsOnScreen;
+
+        // pernalise certain orientations
+        var orientationBias = d3.sum(layout.map(function(d) {
+            // this bias is not as strong as overlap penalty
+            var area = d.width * d.height / 2;
+            if (d.location === 'bottom-right') {
+                area = 0;
+            }
+            if (d.location === 'middle-right' || d.location === 'bottom-center') {
+                area = area / 2;
+            }
+            return area;
+        }));
+
+        return collisionArea + areaOutsideContainer + orientationBias;
     }
 
     return strategy;

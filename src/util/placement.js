@@ -4,22 +4,23 @@ export function getAllPlacements(label) {
     var width = label.width;
     var height = label.height;
     return [
-        getPlacement(x, y, width, height), // Same location
-        getPlacement(x - width, y, width, height), // Left
-        getPlacement(x - width, y - height, width, height), // Up, left
-        getPlacement(x, y - height, width, height), // Up
-        getPlacement(x, y - height / 2, width, height), // Half up
-        getPlacement(x - width / 2, y, width, height), // Half left
-        getPlacement(x - width, y - height / 2, width, height), // Full left, half up
-        getPlacement(x - width / 2, y - height, width, height) // Full up, half left
+        getPlacement(x, y, width, height, 'bottom-right'),
+        getPlacement(x - width, y, width, height, 'bottom-left'),
+        getPlacement(x - width, y - height, width, height, 'top-left'),
+        getPlacement(x, y - height, width, height, 'top-right'),
+        getPlacement(x, y - height / 2, width, height, 'middle-right'),
+        getPlacement(x - width / 2, y, width, height, 'bottom-center'),
+        getPlacement(x - width, y - height / 2, width, height, 'middle-left'),
+        getPlacement(x - width / 2, y - height, width, height, 'top-center')
     ];
 }
 
-export function getPlacement(x, y, width, height) {
+export function getPlacement(x, y, width, height, location) {
     return {
-        x: x,
-        y: y,
-        width: width,
-        height: height
+        x,
+        y,
+        width,
+        height,
+        location
     };
 }
