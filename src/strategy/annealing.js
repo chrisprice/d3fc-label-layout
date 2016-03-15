@@ -50,7 +50,7 @@ export default function() {
             }));
         }
 
-        // pernalise certain orientations
+        // penalise certain orientations
         var orientationBias = d3.sum(layout.map(function(d) {
             // this bias is not as strong as overlap penalty
             var area = d.width * d.height / 2;

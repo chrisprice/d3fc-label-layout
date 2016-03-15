@@ -9,8 +9,28 @@ var width = 700;
 var height = 350;
 var itemWidth = 60;
 var itemHeight = 20;
-var strategy = fc.layout.strategy.annealing();
+var strategy = strategyInterceptor(fc.layout.strategy.annealing());
 var data = [];
+
+// we intercept the strategy in order to capture the final layout and compute statistics
+function strategyInterceptor(strategy) {
+    var interceptor = function(layout) {
+        var start = new Date().getMilliseconds();
+        var finalLayout = strategy(layout);
+        var time = new Date().getMilliseconds() - start;
+
+        // record some statistics on this strategy
+        if (!interceptor.time) {
+            Object.defineProperty(interceptor, 'time', { enumerable: false, writable: true });
+            Object.defineProperty(interceptor, 'hidden', { enumerable: false, writable: true });
+        }
+        interceptor.time = time;
+        interceptor.hidden = finalLayout.filter(function(d) { return d.hidden; }).length;
+        return finalLayout;
+    };
+    d3.rebind(interceptor, strategy, 'bounds');
+    return interceptor;
+}
 
 function generateData() {
     var dataCount = document.getElementById('label-count').value;
@@ -31,6 +51,17 @@ var svg = d3.select('svg')
 function render() {
     svg.selectAll('g').remove();
 
+    svg.append('g')
+        .selectAll('circle')
+        .data(data)
+        .enter()
+        .append('circle')
+        .attr({
+            r: 2,
+            cx: function(d) { return d.x; },
+            cy: function(d) { return d.y; }
+        });
+
     var labels = fc.layout.label(strategy)
         .size(function() {
             var textSize = d3.select(this)
@@ -44,6 +75,10 @@ function render() {
     svg.append('g')
         .datum(data)
         .call(labels);
+
+    var statsElement = document.getElementById('statistics');
+    statsElement.innerHTML = '<b>Execution Time:</b> ' + strategy.time + 'ms, ' +
+        '<b>Hidden Labels:</b> ' + strategy.hidden;
 }
 
 function getStrategyName() {
@@ -74,6 +109,11 @@ d3.select('#strategy-form .btn')
         if (enforceBounds) {
             strategy.bounds([width, height]);
         }
+        var removeOverlaps = document.getElementById('remove-overlaps').checked;
+        if (removeOverlaps) {
+            strategy = fc.layout.strategy.removeOverlaps(strategy);
+        }
+        strategy = strategyInterceptor(strategy);
         render();
     });
 
@@ -85,4 +125,4 @@ d3.select('#labels-form .btn')
     });
 
 generateData();
-render();
+setTimeout(render, 100);

@@ -41,8 +41,8 @@ export default function(layoutStrategy) {
             var layout = strategy(childRects);
 
             g.attr({
-                'display': function(d, i) {
-                    return layout[i].hidden ? 'none' : 'inherit';
+                'style': function(d, i) {
+                    return 'display:' + (layout[i].hidden ? 'none' : 'inherit');
                 },
                 'transform': function(d, i) {
                     return 'translate(' + layout[i].x + ', ' + layout[i].y + ')';

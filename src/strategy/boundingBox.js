@@ -1,6 +1,6 @@
 export default function() {
 
-    var bounds = null;
+    var bounds = [0, 0];
 
     var strategy = function(data) {
         return data.map(function(d, i) {
