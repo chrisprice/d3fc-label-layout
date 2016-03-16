@@ -35,7 +35,6 @@
     "jasmine": "^2.4.1",
     "js-combinatorics": "^0.5.0",
     "jsdom": "^8.1.0",
-    "live-server": "^0.9.2",
     "rimraf": "^2.5.2",
     "rollup": "^0.25.4",
     "rollup-plugin-babel": "^2.4.0",
