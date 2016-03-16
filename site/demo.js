@@ -86,7 +86,7 @@ function render() {
 
     var statsElement = document.getElementById('statistics');
     statsElement.innerHTML = '<b>Execution Time:</b> ' + strategy.time + 'ms, ' +
-        '<b>Hidden Labels:</b> ' + strategy.hidden + ' ' +
+        '<b>Hidden Labels:</b> ' + strategy.hidden + ', ' +
         '<b>Overlap Area:</b> ' + strategy.overlap.toFixed(2);
 }
 

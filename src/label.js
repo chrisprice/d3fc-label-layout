@@ -1,7 +1,7 @@
 import d3 from 'd3';
 import dataJoinUtil from './util/dataJoin';
 import {noop, identity} from './util/fn';
-import {rebindAll, rebind} from './util/rebind';
+import {include, rebindAll} from 'd3fc-rebind';
 
 export default function(layoutStrategy) {
 
@@ -66,7 +66,7 @@ export default function(layoutStrategy) {
         });
     };
 
-    rebind(label, dataJoin, 'key');
+    rebindAll(label, dataJoin, include('key'));
     rebindAll(label, strategy);
 
     label.size = function(x) {

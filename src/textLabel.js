@@ -1,7 +1,6 @@
 import d3 from 'd3';
 import dataJoinUtil from './util/dataJoin';
 import {noop} from './util/fn';
-import {rebindAll, rebind} from './util/rebind';
 
 export default function(layoutStrategy) {
 

@@ -1,6 +1,6 @@
 # d3fc-label-layout
 
-A D3 layout that places labels avoiding overlaps, with strategies including simulated annealing, greedy and local.
+A D3 layout that places labels avoiding overlaps, with strategies including simulated annealing, greedy and a strategy that removes overlapping labels.
 
 ![d3fc label layout](d3fc-label-layout.png)
 
