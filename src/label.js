@@ -1,21 +1,20 @@
 import d3 from 'd3';
 import dataJoinUtil from './util/dataJoin';
-import {noop, identity} from './util/fn';
 import {include, rebindAll} from 'd3fc-rebind';
 
 export default function(layoutStrategy) {
 
     var size = d3.functor([0, 0]);
-    var position = function(d, i) { return [d.x, d.y]; };
-    var strategy = layoutStrategy || identity;
-    var component = noop;
+    var position = (d, i) => [d.x, d.y];
+    var strategy = layoutStrategy || ((x) => x);
+    var component = () => {};
 
     var dataJoin = dataJoinUtil()
         .selector('g.label')
         .element('g')
         .attr('class', 'label');
 
-    var label = function(selection) {
+    var label = (selection) => {
 
         selection.each(function(data, index) {
 
@@ -23,7 +22,7 @@ export default function(layoutStrategy) {
                 .call(component);
 
             // obtain the rectangular bounding boxes for each child
-            var childRects = g[0].map(function(node, i) {
+            var childRects = g[0].map((node, i) => {
                 var d = d3.select(node).datum();
                 var childPos = position.call(node, d, i);
                 var childSize = size.call(node, d, i);
@@ -41,25 +40,13 @@ export default function(layoutStrategy) {
             var layout = strategy(childRects);
 
             g.attr({
-                'style': function(d, i) {
-                    return 'display:' + (layout[i].hidden ? 'none' : 'inherit');
-                },
-                'transform': function(d, i) {
-                    return 'translate(' + layout[i].x + ', ' + layout[i].y + ')';
-                },
+                'style': (_, i) => 'display:' + (layout[i].hidden ? 'none' : 'inherit'),
+                'transform': (_, i) => 'translate(' + layout[i].x + ', ' + layout[i].y + ')',
                 // set the layout width / height so that children can use SVG layout if required
-                'layout-width': function(d, i) {
-                    return layout[i].width;
-                },
-                'layout-height': function(d, i) {
-                    return layout[i].height;
-                },
-                'anchor-x': function(d, i) {
-                    return position.call(this, d, i)[0] - layout[i].x;
-                },
-                'anchor-y': function(d, i) {
-                    return position.call(this, d, i)[1] - layout[i].y;
-                }
+                'layout-width': (_, i) => layout[i].width,
+                'layout-height': (_, i) => layout[i].height,
+                'anchor-x': (d, i) => position.call(this, d, i)[0] - layout[i].x,
+                'anchor-y': (d, i) => position.call(this, d, i)[1] - layout[i].y
             });
 
             g.call(component);

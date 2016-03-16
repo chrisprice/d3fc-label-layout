@@ -1,19 +1,14 @@
 import d3 from 'd3';
 import intersect from '../intersect';
 
-export function collisionArea(rectangles, index) {
-    var rectangle = rectangles[index];
-    var collisions = rectangles.filter(function(_, i) {
-        return index !== i;
-    });
+// computes the area of overlap between the rectangle with the given index with the
+// rectangles in the array
+export const collisionArea = (rectangles, index) =>  d3.sum(
+        rectangles.filter((_, i) => index !== i)
+            .map((d) => intersect(rectangles[index], d))
+    );
 
-    return d3.sum(collisions.map(function(d) {
-        return intersect(rectangle, d);
-    }));
-}
-
-export function totalCollisionArea(rectangles) {
-    return d3.sum(rectangles.map(function(_, i) {
-        return collisionArea(rectangles, i);
-    }));
-}
+// computes the total overlapping area of all of the rectangles in the given array
+export const totalCollisionArea = (rectangles) => d3.sum(
+    rectangles.map((_, i) => collisionArea(rectangles, i))
+);

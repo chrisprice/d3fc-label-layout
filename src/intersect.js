@@ -1,11 +1,10 @@
-function isIntersecting(a, b) {
-    return !(a.x >= (b.x + b.width) ||
+const isIntersecting = (a, b) =>
+    !(a.x >= (b.x + b.width) ||
        (a.x + a.width) <= b.x ||
        a.y >= (b.y + b.height) ||
        (a.y + a.height) <= b.y);
-}
 
-export default function intersect(a, b) {
+export default (a, b) => {
     if (isIntersecting(a, b)) {
         var left = Math.max(a.x, b.x);
         var right = Math.min(a.x + a.width, b.x + b.width);
@@ -15,4 +14,4 @@ export default function intersect(a, b) {
     } else {
         return 0;
     }
-}
+};

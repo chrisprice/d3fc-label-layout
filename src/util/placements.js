@@ -9,7 +9,7 @@ function getPlacement(x, y, width, height, location) {
 }
 
 // returns all the potential placements of the given label
-export function getAllPlacements(label) {
+export default (label) => {
     var x = label.x;
     var y = label.y;
     var width = label.width;
@@ -24,4 +24,4 @@ export function getAllPlacements(label) {
         getPlacement(x - width, y - height / 2, width, height, 'middle-left'),
         getPlacement(x - width / 2, y - height, width, height, 'top-center')
     ];
-}
+};

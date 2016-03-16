@@ -1,5 +1,4 @@
 import d3 from 'd3';
-import {identity, index} from './fn';
 
 // "Caution: avoid interpolating to or from the number zero when the interpolator is used to generate
 // a string (such as with attr).
@@ -16,16 +15,16 @@ var effectivelyZero = 1e-6;
 // This is achieved by appending the element to the enter selection before exposing it.
 // A default transition of fade in/out is also implicitly added but can be modified.
 
-export default function() {
+export default () => {
     var selector = 'g';
     var children = false;
     var element = 'g';
     var attr = {};
-    var key = index;
+    var key = (_, i) => i;
 
-    var dataJoin = function(container, data) {
+    var dataJoin = (container, data) => {
 
-        var joinedData = data || identity;
+        var joinedData = data || ((x) => x);
 
         // Can't use instanceof d3.selection (see #458)
         if (!(container.selectAll && container.node)) {
@@ -118,4 +117,4 @@ export default function() {
     };
 
     return dataJoin;
-}
+};

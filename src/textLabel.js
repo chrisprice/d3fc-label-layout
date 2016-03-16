@@ -1,11 +1,10 @@
 import d3 from 'd3';
 import dataJoinUtil from './util/dataJoin';
-import {noop} from './util/fn';
 
-export default function(layoutStrategy) {
+export default (layoutStrategy) => {
 
     var padding = 2;
-    var value = noop;
+    var value = (x) => x;
 
     var textJoin = dataJoinUtil()
         .selector('text')
@@ -19,7 +18,7 @@ export default function(layoutStrategy) {
         .selector('circle')
         .element('circle');
 
-    var textLabel = function(selection) {
+    var textLabel = (selection) => {
         selection.each(function(data, index) {
 
             var width = Number(this.getAttribute('layout-width'));
@@ -68,4 +67,4 @@ export default function(layoutStrategy) {
     };
 
     return textLabel;
-}
+};

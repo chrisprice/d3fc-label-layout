@@ -1,23 +1,19 @@
 import d3 from 'd3';
 import {totalCollisionArea} from './util/collision';
 import intersect from './intersect';
-import {getAllPlacements} from './util/placement';
+import placements from './util/placements';
 
-function randomItem(array) {
-    return array[randomIndex(array)];
-}
+const randomItem = (array) => array[randomIndex(array)];
 
-function randomIndex(array) {
-    return Math.floor(Math.random() * array.length);
-}
+const randomIndex = (array) => Math.floor(Math.random() * array.length);
 
-function cloneAndReplace(array, index, replacement) {
+const cloneAndReplace = (array, index, replacement) => {
     var clone = array.slice();
     clone[index] = replacement;
     return clone;
-}
+};
 
-export default function() {
+export default () => {
 
     var temperature = 1000;
     var cooling = 1;
@@ -28,7 +24,7 @@ export default function() {
         var victimLabelIndex = randomIndex(originalData);
         var label = originalData[victimLabelIndex];
 
-        var replacements = getAllPlacements(label);
+        var replacements = placements(label);
         var replacement = randomItem(replacements);
 
         return cloneAndReplace(iteratedData, victimLabelIndex, replacement);
@@ -44,7 +40,7 @@ export default function() {
             var containerRect = {
                 x: 0, y: 0, width: bounds[0], height: bounds[1]
             };
-            areaOutsideContainer = d3.sum(layout.map(function(d) {
+            areaOutsideContainer = d3.sum(layout.map((d) => {
                 var areaOutside = d.width * d.height - intersect(d, containerRect);
                 // this bias is twice as strong as the overlap penalty
                 return areaOutside * 2;
@@ -52,7 +48,7 @@ export default function() {
         }
 
         // penalise certain orientations
-        var orientationBias = d3.sum(layout.map(function(d) {
+        var orientationBias = d3.sum(layout.map((d) => {
             // this bias is not as strong as overlap penalty
             var area = d.width * d.height / 4;
             if (d.location === 'bottom-right') {
@@ -67,7 +63,7 @@ export default function() {
         return collisionArea + areaOutsideContainer + orientationBias;
     }
 
-    var strategy = function(data) {
+    var strategy = (data) => {
 
         var originalData = data;
         var iteratedData = data;
@@ -94,21 +90,21 @@ export default function() {
         return iteratedData;
     };
 
-    strategy.temperature = function(i) {
+    strategy.temperature = function(x) {
         if (!arguments.length) {
             return temperature;
         }
 
-        temperature = i;
+        temperature = x;
         return strategy;
     };
 
-    strategy.cooling = function(i) {
+    strategy.cooling = function(x) {
         if (!arguments.length) {
             return cooling;
         }
 
-        cooling = i;
+        cooling = x;
         return strategy;
     };
 
@@ -121,4 +117,4 @@ export default function() {
     };
 
     return strategy;
-}
+};
