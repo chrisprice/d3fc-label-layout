@@ -1,48 +1,31 @@
 import { sum } from 'd3-array';
-import { totalCollisionArea } from './util/collision';
-import intersect from './intersect';
-import minimum from './util/minimum';
+import { collisionArea } from './util/collision';
+import intersect from './util/intersect';
 import placements from './util/placements';
+import layout from './util/layout';
 
 export default () => {
 
-    let bounds = [0, 0];
+    let bounds;
 
-    const scorer = (layout) => {
-        const areaOfCollisions = totalCollisionArea(layout);
+    const containerPenalty = (rectangle) =>
+        bounds ? rectangle.width * rectangle.height - intersect(rectangle, bounds) : 0;
 
-        let areaOutsideContainer = 0;
-        if (bounds[0] !== 0 && bounds[1] !== 0) {
-            const containerRect = {
-                x: 0, y: 0, width: bounds[0], height: bounds[1]
-            };
-            areaOutsideContainer = sum(layout.map((d) => {
-                const areaOutside = d.width * d.height - intersect(d, containerRect);
-                // this bias is twice as strong as the overlap penalty
-                return areaOutside * 2;
-            }));
-        }
-
-        return areaOfCollisions + areaOutsideContainer;
-    };
+    const penaltyForRectangle = (rectangle, index, rectangles) =>
+        collisionArea(rectangles, index) +
+        containerPenalty(rectangle);
 
     const strategy = (data) => {
-        let rectangles = [];
+        let rectangles = layout()
+            .locationScore(penaltyForRectangle)
+            .rectangles(data);
 
-        data.forEach((rectangle) => {
-            // add this rectangle - in all its possible placements
-            const candidateConfigurations = placements(rectangle)
-                .map((placement) => {
-                    const copy = rectangles.slice();
-                    copy.push(placement);
-                    return copy;
-                });
-
-            // keep the one the minimises the 'score'
-            rectangles = minimum(candidateConfigurations, scorer)[1];
+        data.forEach((rectangle, index) => {
+            placements(rectangle).forEach((placement, placementIndex) => {
+                rectangles = rectangles(placement, index);
+            });
         });
-
-        return rectangles;
+        return rectangles.rectangles();
     };
 
     strategy.bounds = (...args) => {

@@ -2,8 +2,26 @@ import { range, sum } from 'd3-array';
 import { rebind } from 'd3fc-rebind';
 import { select, selectAll } from 'd3-selection';
 import * as d3 from 'd3-selection';
-import { layoutLabel, layoutTextLabel, layoutAnnealing, layoutIntersect, layoutRemoveOverlaps } from '..';
+import { layoutLabel, layoutTextLabel, layoutAnnealing, layoutRemoveOverlaps } from '..';
 import * as fc from '..';
+
+const isIntersecting = (a, b) =>
+    !(a.x >= (b.x + b.width) ||
+       (a.x + a.width) <= b.x ||
+       a.y >= (b.y + b.height) ||
+       (a.y + a.height) <= b.y);
+
+const layoutIntersect = (a, b) => {
+    if (isIntersecting(a, b)) {
+        const left = Math.max(a.x, b.x);
+        const right = Math.min(a.x + a.width, b.x + b.width);
+        const top = Math.max(a.y, b.y);
+        const bottom = Math.min(a.y + a.height, b.y + b.height);
+        return (right - left) * (bottom - top);
+    } else {
+        return 0;
+    }
+};
 
 const labelPadding = 4;
 const label = layoutTextLabel()
@@ -74,10 +92,7 @@ const render = () => {
 
     const labels = layoutLabel(strategy)
         .size((_, i, g) => {
-            const textSize = select(g[i])
-              .select('text')
-              .node()
-              .getBBox();
+            const textSize = g[i].getElementsByTagName('text')[0].getBBox();
             return [textSize.width + labelPadding * 2, textSize.height + labelPadding * 2];
         })
         .component(label);
@@ -118,7 +133,7 @@ select('#strategy-form .btn')
         }
         const enforceBounds = document.getElementById('enforce-bounds').checked;
         if (enforceBounds) {
-            strategy.bounds([width, height]);
+            strategy.bounds({x: 0, y: 0, width, height});
         }
         const removeOverlaps = document.getElementById('remove-overlaps').checked;
         if (removeOverlaps) {
